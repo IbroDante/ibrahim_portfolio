@@ -1,0 +1,53 @@
+services:
+- type: pserv
+  name: mysql
+  plan: starter
+  env: docker
+  autoDeploy: false
+  disk:
+    name: mysql
+    mountPath: /var/lib/mysql
+    sizeGB: 10
+  envVars:
+  - fromGroup: mysql
+  buildCommand: "./build.sh"
+
+envVarGroups:
+- name: mysql
+  envVars:
+  - key: MYSQL_DATABASE
+    value: db
+  - key: MYSQL_USER
+    value: mysql-container
+  - key: MYSQL_PASSWORD
+    generateValue: true
+  - key: MYSQL_ROOT_PASSWORD
+    generateValue: true
+
+  
+
+# # Exported from Render on 2024-06-01T13:02:14Z
+# services1:
+# - type: web
+#   name: intime-2
+#   runtime: python
+#   repo: https://github.com/IbroDante/intime
+#   plan: free
+#   envVars:
+#   - key: DATABASE_USER
+#     sync: true
+#   - key: DATABASE_PASSWORD
+#     sync: true
+#   - key: DATABASE_NAME
+#     sync: true
+#   - key: DATABASE_HOST
+#     sync: true
+#   region: oregon
+#   buildCommand: pip install -r requirements.txt
+#   startCommand: python manage.py migrate && python start_prometheus_server.py & gunicorn
+#     -b 0.0.0.0:8000 intime.wsgi:application --workers 3 --threads 2 --worker-class
+#     gthread --timeout 120
+#   domains:
+#   - intimeng.com
+#   - www.intimeng.com
+# version: "1"
