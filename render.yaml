@@ -1,53 +1,18 @@
 services:
-- type: pserv
-  name: mysql
+- type: web
+  name: ibrahim-portfolio
+  runtime: python
   plan: free
-  env: docker
-  autoDeploy: false
-  disk:
-    name: mysql
-    mountPath: /var/lib/mysql
-    sizeGB: 10
-  envVars:
-  - fromGroup: mysql
   buildCommand: "./build.sh"
-
-envVarGroups:
-- name: mysql
+  startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"
   envVars:
-  - key: MYSQL_DATABASE
-    value: db
-  - key: MYSQL_USER
-    value: mysql-container
-  - key: MYSQL_PASSWORD
-    generateValue: true
-  - key: MYSQL_ROOT_PASSWORD
-    generateValue: true
-
-  
-
-# # Exported from Render on 2024-06-01T13:02:14Z
-# services1:
-# - type: web
-#   name: intime-2
-#   runtime: python
-#   repo: https://github.com/IbroDante/intime
-#   plan: free
-#   envVars:
-#   - key: DATABASE_USER
-#     sync: true
-#   - key: DATABASE_PASSWORD
-#     sync: true
-#   - key: DATABASE_NAME
-#     sync: true
-#   - key: DATABASE_HOST
-#     sync: true
-#   region: oregon
-#   buildCommand: pip install -r requirements.txt
-#   startCommand: python manage.py migrate && python start_prometheus_server.py & gunicorn
-#     -b 0.0.0.0:8000 intime.wsgi:application --workers 3 --threads 2 --worker-class
-#     gthread --timeout 120
-#   domains:
-#   - intimeng.com
-#   - www.intimeng.com
-# version: "1"
+  - key: BREVO_API_KEY
+    sync: false
+  - key: BREVO_SENDER_EMAIL
+    value: mololuwa.ibrahim@gmail.com
+  - key: BREVO_SENDER_NAME
+    value: Ibrahim Balogun Portfolio
+  - key: CONTACT_RECIPIENT_EMAIL
+    value: ibroman02@yahoo.com
+  - key: CONTACT_RECIPIENT_NAME
+    value: Ibrahim Balogun
