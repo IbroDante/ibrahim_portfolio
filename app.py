@@ -23,7 +23,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_IMAGES_DIR = BASE_DIR / "static" / "images"
-REACT_BUILD_DIR = BASE_DIR / "frontend_bundle"
+REACT_BUILD_DIR = BASE_DIR / "frontend" / "dist"
 CV_FILENAME = "IBRAHIM-BALOGUN_myON.pdf"
 
 RATE_LIMIT_WINDOW_SECONDS = 600

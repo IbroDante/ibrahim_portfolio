@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/",
   build: {
-    outDir: "../frontend_bundle",
+    outDir: "dist",
     emptyOutDir: true,
     sourcemap: false,
   },
