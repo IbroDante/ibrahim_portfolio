@@ -4,8 +4,8 @@ Modern, dark-first full-stack developer portfolio built with **React**, **Tailwi
 
 ## Architecture
 
-- **Frontend (`frontend/`)**: 100% React SPA (React 19 + Vite + Tailwind CSS v4 + Lucide Icons) with zero HTML/Jinja templates. All portfolio images (`frontend/src/assets/`) and CV PDF (`frontend/public/Ibrahim-Balogun-CV.pdf`) are bundled directly inside the React app.
-- **Backend (`app.py`, `brevo_service.py`)**: Pure Flask JSON API + static React bundle host serving `frontend_bundle/` at `/`, PDF resume at `/cv`, health/status endpoints (`/api/health`, `/api/contact/status`), and `POST /api/contact` powered by Brevo v3 (`https://api.brevo.com/v3/smtp/email`).
+- **Frontend (`frontend/`)**: 100% React SPA (React 19 + Vite + Tailwind CSS v4 + Lucide Icons) with zero HTML/Jinja templates. All portfolio images (`frontend/src/assets/`) and CV PDF (`frontend/public/Ibrahim-Balogun-CV.pdf`) are bundled directly into `frontend/dist/`.
+- **Backend (`app.py`, `brevo_service.py`)**: Pure Flask JSON API + static React bundle host serving `frontend/dist/` at `/`, PDF resume at `/cv`, health/status endpoints (`/api/health`, `/api/contact/status`), and `POST /api/contact` powered by Brevo v3 (`https://api.brevo.com/v3/smtp/email`).
 
 ## How the Brevo Email Workflow Works
 
@@ -72,9 +72,22 @@ npm --prefix frontend run dev
 pytest -v
 ```
 
-## Deployment (Render)
+## Deployment on Render
 
-`render.yaml` and `build.sh` are preconfigured for Render:
-1. Connect this repository on Render as a Web Service (or Blueprint).
-2. Add the secret **`BREVO_API_KEY`** in Render Dashboard -> **Environment**.
-3. `BREVO_SENDER_EMAIL` (`mololuwa.ibrahim@gmail.com`) and `CONTACT_RECIPIENT_EMAIL` (`ibroman02@yahoo.com`) are configured cleanly in `render.yaml`.
+### Option A — Single Python Web Service (Recommended — React + Flask + Brevo together)
+
+`render.yaml` and `build.sh` are preconfigured for a single Render Web Service:
+- **Type**: Web Service (**Python 3**) or Blueprint (`render.yaml`)
+- **Root Directory**: *(leave blank / repo root)*
+- **Build Command**: `./build.sh`
+- **Start Command**: `gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120`
+- **Environment Variables**: add `BREVO_API_KEY` (plus `BREVO_SENDER_EMAIL=mololuwa.ibrahim@gmail.com` and `CONTACT_RECIPIENT_EMAIL=ibroman02@yahoo.com`).
+
+### Option B — Separate Render Static Site (Frontend) + Python Web Service (Backend API)
+
+If you deploy the React frontend as a standalone **Render Static Site**:
+- **Root Directory**: `frontend` (not `frontend/dist`)
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `dist`
+- **Environment Variable**: `VITE_API_BASE_URL=https://<your-flask-backend>.onrender.com`
+- **Rewrite Rule**: `/*` -> `/index.html` (Rewrite)
