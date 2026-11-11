@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { ArrowUpRight, ExternalLink, Github, Terminal, X } from "lucide-react";
+import SmartImage from "./SmartImage";
 
 export default function ProjectModal({ project, onClose, onInquire }) {
   useEffect(() => {

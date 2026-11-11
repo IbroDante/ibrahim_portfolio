@@ -9,6 +9,7 @@ import ProjectModal from "./components/ProjectModal";
 import SkillsMatrix from "./components/SkillsMatrix";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
+import { resolveApiBase } from "./lib/api";
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -55,6 +56,12 @@ export default function App() {
       return () => clearTimeout(timer);
     }
     return undefined;
+  }, []);
+
+  // Resolve which backend serves the contact form up front so the first
+  // submission does not have to wait for a discovery round-trip.
+  useEffect(() => {
+    resolveApiBase().catch(() => undefined);
   }, []);
 
   const handleToggleTheme = () => {

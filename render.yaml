@@ -1,10 +1,19 @@
 services:
+# ---------------------------------------------------------------------------
+# Single Render Web Service: React build + Flask API on one origin.
+#
+# The React app is compiled to `frontend/dist/` during the build, and Flask
+# serves that folder at `/` while exposing the JSON API under `/api/*`.
+# Because both live on the same domain there is no CORS configuration and
+# the contact form always reaches the backend.
+# ---------------------------------------------------------------------------
 - type: web
   name: ibrahim-portfolio
   runtime: python
   plan: free
   buildCommand: "./build.sh"
   startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"
+  healthCheckPath: "/api/health"
   envVars:
   - key: BREVO_API_KEY
     sync: false
@@ -16,3 +25,6 @@ services:
     value: ibroman02@yahoo.com
   - key: CONTACT_RECIPIENT_NAME
     value: Ibrahim Balogun
+  # Allow the standalone Static Site (if used) to call this API cross-origin.
+  - key: CORS_ORIGINS
+    value: "*"

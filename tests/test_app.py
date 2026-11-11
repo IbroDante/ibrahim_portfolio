@@ -233,3 +233,56 @@ def test_spa_and_built_assets_served_by_flask(client):
     assert cv_resp.data.startswith(b"%PDF")
 
 
+def test_bundled_images_are_served(client):
+    """Portfolio images live at stable /images/* URLs inside the React build."""
+    test_client, _ = client
+
+    for name in (
+        "mypix.jpg",
+        "pix.png",
+        "insaaf.png",
+        "intime.png",
+        "edupix.png",
+        "help.jpeg",
+        "office.jpeg",
+        "taxi.png",
+        "osun.jpeg",
+    ):
+        resp = test_client.get(f"/images/{name}")
+        assert resp.status_code == 200, f"missing bundled image: {name}"
+        assert len(resp.data) > 1000
+
+
+def test_runtime_config_is_served(client):
+    """The static-site build must be able to discover the Flask API at runtime."""
+    test_client, _ = client
+    resp = test_client.get("/config.js")
+    assert resp.status_code == 200
+    body = resp.get_data(as_text=True)
+    assert "__PORTFOLIO_CONFIG__" in body
+    assert "apiBaseUrl" in body
+
+
+def test_api_cors_headers_present(client):
+    test_client, _ = client
+    resp = test_client.get("/api/health", headers={"Origin": "https://example.com"})
+    assert resp.status_code == 200
+    assert resp.headers.get("Access-Control-Allow-Origin") is not None
+    assert "POST" in resp.headers.get("Access-Control-Allow-Methods", "")
+
+
+def test_contact_options_preflight(client):
+    test_client, _ = client
+    resp = test_client.options(
+        "/api/contact",
+        headers={
+            "Origin": "https://ibrahimportfolio-v0bt.onrender.com",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        },
+    )
+    assert resp.status_code in (200, 204)
+    assert resp.headers.get("Access-Control-Allow-Origin") is not None
+    assert "Content-Type" in resp.headers.get("Access-Control-Allow-Headers", "")
+
+
