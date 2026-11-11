@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Cpu, Database, Layout, Users } from "lucide-react";
+import { Cpu, Database, Smartphone, Users } from "lucide-react";
 import { SKILL_GROUPS } from "../data/portfolioData";
 
 const GROUP_ICONS = {
   backend: Cpu,
-  frontend: Layout,
+  frontend_mobile: Smartphone,
   data_devops: Database,
   operations: Users,
 };

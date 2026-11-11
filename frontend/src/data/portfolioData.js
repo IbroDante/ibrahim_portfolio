@@ -1,3 +1,13 @@
+import mypixImg from "../assets/mypix.jpg";
+import pixImg from "../assets/pix.png";
+import insaafImg from "../assets/insaaf.png";
+import intimeImg from "../assets/intime.png";
+import edupixImg from "../assets/edupix.png";
+import helpImg from "../assets/help.jpeg";
+import officeImg from "../assets/office.jpeg";
+import taxiImg from "../assets/taxi.png";
+import osunImg from "../assets/osun.jpeg";
+
 export const PROFILE = {
   name: "Ibrahim Balogun",
   shortName: "Ibrahim B.",
@@ -5,8 +15,8 @@ export const PROFILE = {
   headline: "Lead Web Developer & Full-Stack Software Engineer",
   roles: [
     "Full-Stack Software Engineer",
+    "React & React Native Mobile Developer",
     "Python (Flask & Django) Specialist",
-    "React & Modern Web Architect",
     "DevOps & Systems Integrator",
   ],
   location: "Abuja, Nigeria",
@@ -15,17 +25,17 @@ export const PROFILE = {
   phone: "+234 706 186 6475",
   phoneHref: "tel:+2347061866475",
   workingHours: "Mon – Sat · 7:00 AM – 9:00 PM WAT",
-  availability: "Open for Full-Stack Builds, Consulting & Senior Roles",
-  cvUrl: "/cv",
-  cvDownloadUrl: "/cv?download=1",
-  heroImage: "/static/images/mypix.jpg",
-  aboutImage: "/static/images/pix.png",
+  availability: "Open for Web, Mobile & Consulting Roles",
+  cvUrl: "/Ibrahim-Balogun-CV.pdf",
+  cvDownloadUrl: "/Ibrahim-Balogun-CV.pdf",
+  heroImage: mypixImg,
+  aboutImage: pixImg,
   bioShort:
-    "Experienced IT professional and software engineer building resilient, cost-saving web platforms since 2016 — from 725-institution national data pipelines to cooperative finance, education, and logistics systems.",
+    "Experienced IT professional and software engineer building resilient web platforms and mobile apps since 2016 — from 725-institution national data pipelines to cooperative finance, education, and logistics systems.",
   bioExtended: [
-    "With over a decade in enterprise IT infrastructure and full-stack software engineering, I design and ship scalable applications that bridge complex backend logic with intuitive user experiences.",
+    "With over a decade in enterprise IT infrastructure and full-stack software engineering, I design and ship scalable web and mobile applications that bridge complex backend logic with intuitive user experiences.",
     "At the Joint Admissions and Matriculation Board (JAMB), I helped integrate 725 higher institutions into a centralized system, built internal workflow platforms, and earned Employee of the Year (2017) for delivering cost-saving software applications.",
-    "Completed the African Leadership Programme (ALX) Software Engineering track (2022–2024) and continuously craft modern products with Python (Flask & Django), React, JavaScript, MySQL, Nginx, and Gunicorn.",
+    "Completed the African Leadership Programme (ALX) Software Engineering track (2022–2024) and continuously craft modern products with React, React Native, Python (Flask & Django), JavaScript, MySQL, Nginx, and Gunicorn.",
   ],
   socials: {
     github: "https://github.com/IbroDante",
@@ -39,7 +49,7 @@ export const IMPACT_STATS = [
   {
     value: "8+",
     label: "Years Engineering & IT",
-    detail: "Web development since 2016; IT systems since 2011",
+    detail: "Web & mobile development since 2016; IT systems since 2011",
   },
   {
     value: "725+",
@@ -61,10 +71,10 @@ export const IMPACT_STATS = [
 export const SERVICES = [
   {
     id: "fullstack",
-    title: "Full-Stack Web Engineering",
+    title: "Web & Mobile App Engineering",
     summary:
-      "Modern React interfaces backed by fast, secure Python (Flask & Django) REST APIs and clean relational database schemas.",
-    deliverables: ["React SPAs", "Flask & Django APIs", "MySQL Architecture"],
+      "Modern React web apps and cross-platform React Native mobile apps backed by fast, secure Python (Flask & Django) APIs.",
+    deliverables: ["React Web Apps", "React Native Mobile", "Flask & Django APIs"],
     icon: "Code2",
   },
   {
@@ -167,14 +177,15 @@ export const SKILL_GROUPS = [
       { name: "Flask", level: "Production" },
       { name: "Django", level: "Production" },
       { name: "Node.js", level: "API Services" },
-      { name: "RESTful APIs & Brevo", level: "Integration" },
+      { name: "RESTful API Integrations", level: "Production" },
     ],
   },
   {
-    id: "frontend",
-    label: "Frontend & UI",
+    id: "frontend_mobile",
+    label: "Frontend & Mobile Apps",
     skills: [
       { name: "React", level: "Modern SPAs" },
+      { name: "Mobile Apps (React Native)", level: "iOS & Android" },
       { name: "JavaScript (ES6+)", level: "Core" },
       { name: "HTML5 & Semantic Markup", level: "Core" },
       { name: "Tailwind CSS & Responsive UI", level: "Modern Design" },
@@ -216,7 +227,7 @@ export const PROJECTS = [
       "Members needed transparent access to cooperative rules, loan fee schedules, and direct communication with administrators without manual paper bottlenecks.",
     outcome:
       "Digitized cooperative membership operations and admin oversight on a fast Flask + MySQL architecture backed by Gunicorn and Nginx.",
-    image: "/static/images/insaaf.png",
+    image: insaafImg,
     liveUrl: "https://jmcs-insaaf.onrender.com/",
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "JavaScript", "Nginx", "Gunicorn"],
@@ -233,7 +244,7 @@ export const PROJECTS = [
       "Unifying moving/packing requests, ground shipping dispatch, and driver registration inside one responsive interface.",
     outcome:
       "Shipped a live production web app deployed on Render with streamlined customer booking and driver onboarding flows.",
-    image: "/static/images/intime.png",
+    image: intimeImg,
     liveUrl: "https://intimeng.onrender.com/",
     githubUrl: null,
     stack: ["Python", "Flask / Django", "JavaScript", "MySQL", "Nginx", "Gunicorn"],
@@ -250,7 +261,7 @@ export const PROJECTS = [
       "Students struggled to locate organized, reliable course materials and peer study resources in one accessible place.",
     outcome:
       "Created a clean course & resource-sharing application with authentication, gallery/blog sections, and student dashboard workflows.",
-    image: "/static/images/edupix.png",
+    image: edupixImg,
     liveUrl: null,
     githubUrl: "https://github.com/IbroDante/EduNg.git",
     stack: ["Python", "Flask", "MySQL", "HTML5", "CSS3", "JavaScript"],
@@ -267,7 +278,7 @@ export const PROJECTS = [
       "Field officers required a zero-friction, reliable form pipeline to escalate examination-center technical issues during live operations.",
     outcome:
       "Reduced turnaround between field issue reporting and central support resolution with structured dashboards and searchable form logs.",
-    image: "/static/images/help.jpeg",
+    image: helpImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "Form Validation", "Admin Dashboard"],
@@ -284,7 +295,7 @@ export const PROJECTS = [
       "Replacing scattered email/paper document handoffs with a centralized, permissioned office portal.",
     outcome:
       "Streamlined internal approvals and searchable document retrieval across administrative teams.",
-    image: "/static/images/office.jpeg",
+    image: officeImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "Role-Based Auth", "MySQL", "Linux"],
@@ -301,7 +312,7 @@ export const PROJECTS = [
       "Verifying registered commercial vehicles and payment compliance cleanly across state transport checkpoints.",
     outcome:
       "Delivered an end-to-end registration and QR verification portal enabling rapid field checks and clear submission confirmation logs.",
-    image: "/static/images/taxi.png",
+    image: taxiImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "QR Code Generation", "MySQL", "JavaScript"],
@@ -318,7 +329,7 @@ export const PROJECTS = [
       "Handling high volumes of applicants with clear guidance, reliable form intake, and administrative visibility.",
     outcome:
       "Built a clean, fast onboarding portal tailored for high accessibility and structured applicant data capture.",
-    image: "/static/images/osun.jpeg",
+    image: osunImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "HTML5", "CSS3", "JavaScript"],

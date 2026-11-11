@@ -93,7 +93,7 @@ export default function Footer() {
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-          <p>&copy; {year} {PROFILE.name}. Built with React, Flask &amp; Brevo.</p>
+          <p>&copy; {year} {PROFILE.name}. Built with React &amp; Flask.</p>
           <div className="flex items-center gap-5">
             <a href="#about" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               About

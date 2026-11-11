@@ -4,8 +4,8 @@ Modern, dark-first full-stack developer portfolio built with **React**, **Tailwi
 
 ## Architecture
 
-- **Frontend (`frontend/`)**: React 19 + Vite + Tailwind CSS v4 + Lucide Icons, featuring a dark-first theme with persisted light-mode toggle, interactive project case study modals, categorized skills matrix, timeline of real experience & international certifications, downloadable PDF CV (`/cv`), and a validated contact form.
-- **Backend (`app.py`, `brevo_service.py`)**: Flask application serving the compiled React SPA from `static/app/`, static assets from `static/images/`, PDF resume at `/cv`, health/status endpoints (`/api/health`, `/api/contact/status`), and `POST /api/contact` backed by Brevo v3 (`https://api.brevo.com/v3/smtp/email`).
+- **Frontend (`frontend/`)**: 100% React SPA (React 19 + Vite + Tailwind CSS v4 + Lucide Icons) with zero HTML/Jinja templates. All portfolio images (`frontend/src/assets/`) and CV PDF (`frontend/public/Ibrahim-Balogun-CV.pdf`) are bundled directly inside the React app.
+- **Backend (`app.py`, `brevo_service.py`)**: Pure Flask JSON API + static React bundle host serving `frontend_bundle/` at `/`, PDF resume at `/cv`, health/status endpoints (`/api/health`, `/api/contact/status`), and `POST /api/contact` powered by Brevo v3 (`https://api.brevo.com/v3/smtp/email`).
 
 ## How the Brevo Email Workflow Works
 

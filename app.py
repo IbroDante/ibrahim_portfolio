@@ -22,8 +22,8 @@ from brevo_service import (
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR / "static"
-REACT_BUILD_DIR = STATIC_DIR / "app"
+STATIC_IMAGES_DIR = BASE_DIR / "static" / "images"
+REACT_BUILD_DIR = BASE_DIR / "frontend_bundle"
 CV_FILENAME = "IBRAHIM-BALOGUN_myON.pdf"
 
 RATE_LIMIT_WINDOW_SECONDS = 600
@@ -55,7 +55,8 @@ class InMemoryRateLimiter:
 
 
 def create_app() -> Flask:
-    app = Flask(__name__, static_folder=str(STATIC_DIR), static_url_path="/static")
+    # Pure API + React bundle host: no Jinja template folder or HTML templates
+    app = Flask(__name__, static_folder=None, template_folder=None)
     app.config["DISABLE_RATE_LIMIT"] = False
     rate_limiter = InMemoryRateLimiter()
     app.extensions["contact_rate_limiter"] = rate_limiter
@@ -66,16 +67,26 @@ def create_app() -> Flask:
             return forwarded_for.split(",")[0].strip()
         return request.remote_addr or "unknown"
 
-    def _serve_spa() -> Response | tuple[str, int]:
+    @app.after_request
+    def add_api_cors_headers(response: Response) -> Response:
+        if request.path.startswith("/api/"):
+            allowed_origins = os.getenv("CORS_ORIGINS", "*")
+            response.headers["Access-Control-Allow-Origin"] = allowed_origins
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        return response
+
+    def _serve_react_app() -> Response | tuple[Response, int]:
         index_path = REACT_BUILD_DIR / "index.html"
         if index_path.exists():
             return send_from_directory(str(REACT_BUILD_DIR), "index.html")
         return (
-            "<!doctype html><html><body style='font-family:sans-serif;padding:2rem;'>"
-            "<h1>Frontend build not found</h1>"
-            "<p>Run <code>npm --prefix frontend install && npm --prefix frontend run build</code> "
-            "to compile the React bundle into <code>static/app/</code>.</p>"
-            "</body></html>",
+            jsonify(
+                {
+                    "ok": False,
+                    "error": "React bundle not built yet. Run: npm --prefix frontend install && npm --prefix frontend run build",
+                }
+            ),
             503,
         )
 
@@ -107,6 +118,10 @@ def create_app() -> Flask:
                 "recipient_email": settings.recipient_email,
             }
         )
+
+    @app.route("/api/contact", methods=["OPTIONS"])
+    def contact_options() -> tuple[str, int]:
+        return "", 204
 
     @app.post("/api/contact")
     def submit_contact() -> tuple[Response, int]:
@@ -179,7 +194,7 @@ def create_app() -> Flask:
             200,
         )
 
-    @app.route("/api/<path:_subpath>", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
+    @app.route("/api/<path:_subpath>", methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
     def api_not_found(_subpath: str) -> tuple[Response, int]:
         return jsonify({"ok": False, "code": "NOT_FOUND", "error": "API endpoint not found."}), 404
 
@@ -188,27 +203,28 @@ def create_app() -> Flask:
     def download_cv() -> Response:
         as_attachment = request.args.get("download") == "1"
         return send_from_directory(
-            str(STATIC_DIR / "images"),
+            str(STATIC_IMAGES_DIR),
             CV_FILENAME,
             as_attachment=as_attachment,
             download_name="Ibrahim-Balogun-CV.pdf",
             mimetype="application/pdf",
         )
 
+    @app.get("/static/images/<path:filename>")
+    def legacy_images(filename: str) -> Response:
+        return send_from_directory(str(STATIC_IMAGES_DIR), filename)
+
     @app.get("/")
-    @app.get("/index.html")
-    @app.get("/about.html")
-    @app.get("/contact.html")
-    @app.get("/services.html")
-    def home() -> Response | tuple[str, int]:
-        return _serve_spa()
+    def root() -> Response | tuple[Response, int]:
+        return _serve_react_app()
 
     @app.get("/<path:path>")
-    def spa_fallback(path: str) -> Response | tuple[str, int]:
-        candidate = REACT_BUILD_DIR / path
-        if candidate.is_file():
-            return send_from_directory(str(REACT_BUILD_DIR), path)
-        return _serve_spa()
+    def spa_or_bundle_asset(path: str) -> Response | tuple[Response, int]:
+        bundle_root = REACT_BUILD_DIR.resolve()
+        candidate = (bundle_root / path).resolve()
+        if candidate.is_file() and bundle_root in candidate.parents:
+            return send_from_directory(str(bundle_root), path)
+        return _serve_react_app()
 
     return app
 

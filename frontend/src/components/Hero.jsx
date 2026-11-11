@@ -109,6 +109,7 @@ export default function Hero() {
               </a>
               <a
                 href={PROFILE.cvDownloadUrl}
+                download="Ibrahim-Balogun-CV.pdf"
                 className="inline-flex items-center gap-2 px-4 py-3.5 rounded-xl font-semibold text-sm text-slate-700 dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
               >
                 <Download className="w-4 h-4" />
@@ -141,7 +142,7 @@ export default function Hero() {
                 LinkedIn
               </a>
               <span className="font-mono-code text-xs text-slate-500 dark:text-slate-400">
-                React · Python · Flask · Django · MySQL
+                React · React Native · Python · Flask · Django · MySQL
               </span>
             </div>
           </div>

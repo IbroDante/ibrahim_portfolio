@@ -10,14 +10,15 @@ import {
   MapPin,
   Phone,
   Send,
-  ShieldCheck,
 } from "lucide-react";
 import { PROFILE } from "../data/portfolioData";
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+
 const TOPIC_PRESETS = [
   "Web Application Build",
+  "Mobile App (React Native)",
   "Python / Flask API",
-  "React Frontend Redesign",
   "IT & Systems Consulting",
   "Full-Time Role",
 ];
@@ -32,12 +33,6 @@ export default function ContactSection({ prefilledSubject }) {
     website: "", // honeypot
   });
 
-  const [brevoStatus, setBrevoStatus] = useState({
-    loading: true,
-    configured: true,
-    recipientEmail: PROFILE.email,
-  });
-
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -48,28 +43,6 @@ export default function ContactSection({ prefilledSubject }) {
       setSubmitResult(null);
     }
   }, [prefilledSubject]);
-
-  useEffect(() => {
-    let active = true;
-    fetch("/api/contact/status")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!active || !data) return;
-        setBrevoStatus({
-          loading: false,
-          configured: Boolean(data.configured),
-          recipientEmail: data.recipient_email || PROFILE.email,
-        });
-      })
-      .catch(() => {
-        if (active) {
-          setBrevoStatus((prev) => ({ ...prev, loading: false }));
-        }
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const handleCopyEmail = async () => {
     try {
@@ -117,7 +90,7 @@ export default function ContactSection({ prefilledSubject }) {
 
     setSubmitting(true);
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -147,17 +120,20 @@ export default function ContactSection({ prefilledSubject }) {
           website: "",
         });
       } else {
+        const isConfigPending = data.code === "BREVO_NOT_CONFIGURED";
         setSubmitResult({
           type: "error",
           code: data.code || "ERROR",
-          message: data.error || "Unable to send your message right now. Please try again.",
+          message: isConfigPending
+            ? "Direct form delivery is temporarily unavailable. You can still send your message right away using the email button below."
+            : data.error || "Unable to send your message right now. Please try again.",
         });
       }
     } catch {
       setSubmitResult({
         type: "error",
         code: "NETWORK_ERROR",
-        message: "Could not reach the backend server. Please try again or email directly.",
+        message: "Could not reach the server right now. Please try again or email directly.",
       });
     } finally {
       setSubmitting(false);
@@ -186,7 +162,7 @@ export default function ContactSection({ prefilledSubject }) {
             Let&apos;s Build Something Dependable
           </h2>
           <p className="mt-3 text-slate-600 dark:text-slate-400">
-            Have a web application, backend integration, or engineering role in mind? Send a message below and it goes straight to my inbox.
+            Have a web application, mobile app, backend integration, or engineering role in mind? Send a message below and it goes straight to my inbox.
           </p>
         </div>
 
@@ -263,42 +239,6 @@ export default function ContactSection({ prefilledSubject }) {
                   </div>
                 </div>
               </div>
-
-              {/* Brevo Relay Status Indicator */}
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
-                <div className="flex items-start gap-2.5 text-xs">
-                  <ShieldCheck
-                    className={`w-4 h-4 shrink-0 mt-0.5 ${
-                      brevoStatus.configured ? "text-emerald-500" : "text-amber-500"
-                    }`}
-                  />
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {brevoStatus.loading ? (
-                      "Checking Brevo API delivery status..."
-                    ) : brevoStatus.configured ? (
-                      <>
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                          Brevo API Active:
-                        </span>{" "}
-                        Form submissions are delivered directly to{" "}
-                        <span className="font-mono-code text-slate-800 dark:text-slate-200">
-                          {brevoStatus.recipientEmail}
-                        </span>
-                        .
-                      </>
-                    ) : (
-                      <>
-                        <span className="font-semibold text-amber-600 dark:text-amber-400">
-                          Brevo API Setup Pending:
-                        </span>{" "}
-                        Add <code className="font-mono-code">BREVO_API_KEY</code> in your{" "}
-                        <code className="font-mono-code">.env</code> or Render environment to send directly to{" "}
-                        <span className="font-mono-code">{brevoStatus.recipientEmail}</span>.
-                      </>
-                    )}
-                  </p>
-                </div>
-              </div>
             </div>
 
             {/* Abuja Map Card */}
@@ -307,7 +247,7 @@ export default function ContactSection({ prefilledSubject }) {
                 title="Kubwa, Abuja Nigeria Map"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15883.116279310793!2d7.336090573412262!3d9.124476111427748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x104dabb69e0752a7%3A0xd3be80e05e3bea79!2sKubwa%2C%20Abuja!5e0!3m2!1sen!2sng!4v1624462799506!5m2!1sen!2sng"
                 width="100%"
-                height="210"
+                height="225"
                 loading="lazy"
                 className="border-0 block dark:invert-[0.9] dark:hue-rotate-180 dark:contrast-90"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -315,7 +255,7 @@ export default function ContactSection({ prefilledSubject }) {
             </div>
           </div>
 
-          {/* Right Column: Brevo Contact Form */}
+          {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
             <div className="rounded-3xl p-6 sm:p-8 bg-white dark:bg-[#0F1624] border border-slate-200 dark:border-slate-800 shadow-lg">
               {submitResult?.type === "success" ? (
@@ -331,7 +271,7 @@ export default function ContactSection({ prefilledSubject }) {
                   </p>
                   {submitResult.messageId && (
                     <p className="font-mono-code text-xs text-slate-500 dark:text-slate-400">
-                      Brevo Reference: {submitResult.messageId}
+                      Reference: {submitResult.messageId}
                     </p>
                   )}
                   <div className="pt-2">
@@ -496,7 +436,8 @@ export default function ContactSection({ prefilledSubject }) {
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                         <span>{submitResult.message}</span>
                       </div>
-                      {submitResult.code === "BREVO_NOT_CONFIGURED" && (
+                      {(submitResult.code === "BREVO_NOT_CONFIGURED" ||
+                        submitResult.code === "NETWORK_ERROR") && (
                         <div className="pl-6">
                           <a
                             href={mailtoFallbackHref}
@@ -510,14 +451,7 @@ export default function ContactSection({ prefilledSubject }) {
                     </div>
                   )}
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Routes via Brevo API directly to{" "}
-                      <span className="font-mono-code text-slate-700 dark:text-slate-300">
-                        {PROFILE.email}
-                      </span>
-                    </p>
-
+                  <div className="flex justify-end pt-1">
                     <button
                       type="submit"
                       disabled={submitting}

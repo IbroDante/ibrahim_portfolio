@@ -2,11 +2,11 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: command === "build" ? "/static/app/" : "/",
+  base: "/",
   build: {
-    outDir: "../static/app",
+    outDir: "../frontend_bundle",
     emptyOutDir: true,
     sourcemap: false,
   },
@@ -16,10 +16,6 @@ export default defineConfig(({ command }) => ({
     allowedHosts: true,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:5000",
-        changeOrigin: true,
-      },
-      "/static/images": {
         target: "http://127.0.0.1:5000",
         changeOrigin: true,
       },
@@ -33,4 +29,4 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-}));
+});

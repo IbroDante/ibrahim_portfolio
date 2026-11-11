@@ -222,9 +222,14 @@ def test_spa_and_built_assets_served_by_flask(client):
         assert '<div id="root"></div>' in html
 
     home_html = test_client.get("/").get_data(as_text=True)
-    asset_urls = re.findall(r'(/static/app/assets/[^"\']+)', home_html)
+    asset_urls = re.findall(r'(/assets/[^"\']+)', home_html)
     assert len(asset_urls) >= 2
     for url in asset_urls:
         asset_resp = test_client.get(url)
         assert asset_resp.status_code == 200
+
+    cv_resp = test_client.get("/Ibrahim-Balogun-CV.pdf")
+    assert cv_resp.status_code == 200
+    assert cv_resp.data.startswith(b"%PDF")
+
 
