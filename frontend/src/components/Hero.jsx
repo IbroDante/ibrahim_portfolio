@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { IMPACT_STATS, PROFILE } from "../data/portfolioData";
+import SmartImage from "./SmartImage";
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);

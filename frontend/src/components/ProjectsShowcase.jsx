@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ArrowUpRight, ExternalLink, Eye, Github, Terminal } from "lucide-react";
 import { PROJECT_CATEGORIES, PROJECTS } from "../data/portfolioData";
+import SmartImage from "./SmartImage";
 
 export default function ProjectsShowcase({ onSelectProject }) {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -76,8 +77,9 @@ export default function ProjectsShowcase({ onSelectProject }) {
 
                 {project.image ? (
                   <div className="aspect-[16/10] overflow-hidden bg-slate-900">
-                    <img
+                    <SmartImage
                       src={project.image}
+                      fallbackSrc={project.imageFallback}
                       alt={project.title}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                     />

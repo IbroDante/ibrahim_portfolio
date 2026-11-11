@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone, Github, Linkedin, ArrowUpRight } from "lucide-react";
 import { PROFILE } from "../data/portfolioData";
+import SmartImage from "./SmartImage";
 
 export default function AboutSection() {
   return (

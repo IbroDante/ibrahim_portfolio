@@ -12,8 +12,7 @@ import {
   Send,
 } from "lucide-react";
 import { PROFILE } from "../data/portfolioData";
-
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+import { submitContact } from "../lib/api";
 
 const TOPIC_PRESETS = [
   "Web Application Build",
@@ -90,26 +89,21 @@ export default function ContactSection({ prefilledSubject }) {
 
     setSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          subject: form.subject.trim() || "Portfolio Contact Inquiry",
-          message: form.message.trim(),
-          website: form.website,
-        }),
+      const result = await submitContact({
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        subject: form.subject.trim() || "Portfolio Contact Inquiry",
+        message: form.message.trim(),
+        website: form.website,
       });
 
-      const data = await response.json();
-      if (response.ok && data.ok) {
+      if (result.kind === "success") {
         setSubmitResult({
           type: "success",
-          message: data.message,
-          deliveredTo: data.delivered_to || PROFILE.email,
-          messageId: data.message_id || "",
+          message: result.message,
+          deliveredTo: result.deliveredTo || PROFILE.email,
+          messageId: result.messageId || "",
         });
         setForm({
           name: "",
@@ -119,21 +113,13 @@ export default function ContactSection({ prefilledSubject }) {
           message: "",
           website: "",
         });
-      } else {
-        const isConfigPending = data.code === "BREVO_NOT_CONFIGURED";
-        setSubmitResult({
-          type: "error",
-          code: data.code || "ERROR",
-          message: isConfigPending
-            ? "Direct form delivery is temporarily unavailable. You can still send your message right away using the email button below."
-            : data.error || "Unable to send your message right now. Please try again.",
-        });
+        return;
       }
-    } catch {
+
       setSubmitResult({
         type: "error",
-        code: "NETWORK_ERROR",
-        message: "Could not reach the server right now. Please try again or email directly.",
+        code: result.code || "ERROR",
+        message: result.message,
       });
     } finally {
       setSubmitting(false);
@@ -436,8 +422,7 @@ export default function ContactSection({ prefilledSubject }) {
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                         <span>{submitResult.message}</span>
                       </div>
-                      {(submitResult.code === "BREVO_NOT_CONFIGURED" ||
-                        submitResult.code === "NETWORK_ERROR") && (
+                      {submitResult.code !== "VALIDATION_ERROR" && (
                         <div className="pl-6">
                           <a
                             href={mailtoFallbackHref}

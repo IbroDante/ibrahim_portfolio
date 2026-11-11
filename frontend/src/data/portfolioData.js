@@ -8,6 +8,16 @@ import officeImg from "../assets/office.jpeg";
 import taxiImg from "../assets/taxi.png";
 import osunImg from "../assets/osun.jpeg";
 
+/**
+ * Stable, deployment-independent image URLs.
+ *
+ * The very same files also live in `frontend/public/images/` so Vite copies
+ * them verbatim into the build output. Because these paths never change
+ * between deploys, browsers and CDNs keep a valid cache entry instead of
+ * hitting a stale 404 for a re-hashed asset URL.
+ */
+const publicImage = (fileName) => `${import.meta.env.BASE_URL}images/${fileName}`;
+
 export const PROFILE = {
   name: "Ibrahim Balogun",
   shortName: "Ibrahim B.",
@@ -28,8 +38,10 @@ export const PROFILE = {
   availability: "Open for Web, Mobile & Consulting Roles",
   cvUrl: "/Ibrahim-Balogun-CV.pdf",
   cvDownloadUrl: "/Ibrahim-Balogun-CV.pdf",
-  heroImage: mypixImg,
-  aboutImage: pixImg,
+  heroImage: publicImage("mypix.jpg"),
+  heroImageFallback: mypixImg,
+  aboutImage: publicImage("pix.png"),
+  aboutImageFallback: pixImg,
   bioShort:
     "Experienced IT professional and software engineer building resilient web platforms and mobile apps since 2016 — from 725-institution national data pipelines to cooperative finance, education, and logistics systems.",
   bioExtended: [
@@ -64,7 +76,7 @@ export const IMPACT_STATS = [
   {
     value: "2017",
     label: "Employee of the Year",
-    detail: "Awarded for cost-saving software applications",
+    detail: "Cost-saving software applications",
   },
 ];
 
@@ -97,7 +109,7 @@ export const SERVICES = [
     id: "support",
     title: "Technical Leadership & IT",
     summary:
-      "Cross-functional coordination, network/desktop troubleshooting, and user-focused support built on SERVICOM standards.",
+      "Cross-functional coordination, desktop troubleshooting, and user-focused support built on SERVICOM standards.",
     deliverables: ["Team Coordination", "Network Admin", "Client-First Delivery"],
     icon: "ShieldCheck",
   },
@@ -124,9 +136,9 @@ export const EXPERIENCE = [
     location: "FCT Abuja, Nigeria",
     highlights: [
       "Monitored and maintained the agency's Local Area Network (LAN), centralized file servers, and security surveillance systems.",
-      "Managed vendor relationships, procurement coordination, and SLA compliance for enterprise IT services.",
+      "Managed vendor relationships, procurement coordination, and SLA compliance for enterprise information systems.",
     ],
-    tags: ["LAN Administration", "File Servers", "CCTV Systems", "Vendor Management"],
+    tags: ["LAN Administration", "File Servers", "CCTV Systems", "Network Admin"],
   },
 ];
 
@@ -135,35 +147,40 @@ export const CREDENTIALS = [
     year: "2022 – 2024",
     title: "ALX Software Engineering Programme",
     issuer: "African Leadership Programme (ALX)",
-    detail: "Intensive full-stack systems engineering, C, Python, Flask APIs, databases, and collaborative software delivery.",
+    detail:
+      "Intensive full-stack systems engineering, C, Python, Flask APIs, databases, and collaborative software delivery.",
     badge: "Engineering",
   },
   {
     year: "2014 – 2019",
     title: "B.Sc. Degree in Economics",
     issuer: "University of Abuja, Nigeria",
-    detail: "Analytical grounding in quantitative methods, economic systems, and data-driven decision making.",
+    detail:
+      "Analytical grounding in quantitative methods, financial systems, and structured decision making.",
     badge: "Degree",
   },
   {
     year: "2019",
     title: "Customer Care / SERVICOM Certificate",
     issuer: "SERVICOM Nigeria",
-    detail: "Public service excellence, SLA delivery, and user-centric technical support workflows.",
+    detail:
+      "Public service excellence, SLA delivery, and user-centric technical support workflows.",
     badge: "Service",
   },
   {
     year: "2014",
     title: "Modern Technology in ICT Training",
     issuer: "Newcastle University, United Kingdom",
-    detail: "International executive training in modern ICT infrastructure and enterprise systems.",
+    detail:
+      "International executive training in modern ICT infrastructure and enterprise systems.",
     badge: "International",
   },
   {
     year: "2012 & 2014",
-    title: "Item Banking & IRT Psychometric Training",
+    title: "Item Banking / IRT Psychometric Training",
     issuer: "CITO · Arnhem, The Netherlands",
-    detail: "Specialized assessment systems and Item Response Theory (IRT) data engineering.",
+    detail:
+      "Item response theory and psychometric assessment systems development.",
     badge: "International",
   },
 ];
@@ -227,7 +244,8 @@ export const PROJECTS = [
       "Members needed transparent access to cooperative rules, loan fee schedules, and direct communication with administrators without manual paper bottlenecks.",
     outcome:
       "Digitized cooperative membership operations and admin oversight on a fast Flask + MySQL architecture backed by Gunicorn and Nginx.",
-    image: insaafImg,
+    image: publicImage("insaaf.png"),
+    imageFallback: insaafImg,
     liveUrl: "https://jmcs-insaaf.onrender.com/",
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "JavaScript", "Nginx", "Gunicorn"],
@@ -244,7 +262,8 @@ export const PROJECTS = [
       "Unifying moving/packing requests, ground shipping dispatch, and driver registration inside one responsive interface.",
     outcome:
       "Shipped a live production web app deployed on Render with streamlined customer booking and driver onboarding flows.",
-    image: intimeImg,
+    image: publicImage("intime.png"),
+    imageFallback: intimeImg,
     liveUrl: "https://intimeng.onrender.com/",
     githubUrl: null,
     stack: ["Python", "Flask / Django", "JavaScript", "MySQL", "Nginx", "Gunicorn"],
@@ -254,14 +273,15 @@ export const PROJECTS = [
     title: "EduNg Learning & Resource Hub",
     category: "Production Platforms",
     year: "Open Source",
-    tagline: "Collaborative educational portal & study-material sharing platform.",
+    tagline: "Full-stack learning & resource-sharing platform.",
     summary:
       "Built for Nigerian students to discover courses, share educational study materials, manage personal learning dashboards, and connect across academic tracks.",
     challenge:
       "Students struggled to locate organized, reliable course materials and peer study resources in one accessible place.",
     outcome:
       "Created a clean course & resource-sharing application with authentication, gallery/blog sections, and student dashboard workflows.",
-    image: edupixImg,
+    image: publicImage("edupix.png"),
+    imageFallback: edupixImg,
     liveUrl: null,
     githubUrl: "https://github.com/IbroDante/EduNg.git",
     stack: ["Python", "Flask", "MySQL", "HTML5", "CSS3", "JavaScript"],
@@ -278,7 +298,8 @@ export const PROJECTS = [
       "Field officers required a zero-friction, reliable form pipeline to escalate examination-center technical issues during live operations.",
     outcome:
       "Reduced turnaround between field issue reporting and central support resolution with structured dashboards and searchable form logs.",
-    image: helpImg,
+    image: publicImage("help.jpeg"),
+    imageFallback: helpImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "Form Validation", "Admin Dashboard"],
@@ -295,7 +316,8 @@ export const PROJECTS = [
       "Replacing scattered email/paper document handoffs with a centralized, permissioned office portal.",
     outcome:
       "Streamlined internal approvals and searchable document retrieval across administrative teams.",
-    image: officeImg,
+    image: publicImage("office.jpeg"),
+    imageFallback: officeImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "Role-Based Auth", "MySQL", "Linux"],
@@ -312,7 +334,8 @@ export const PROJECTS = [
       "Verifying registered commercial vehicles and payment compliance cleanly across state transport checkpoints.",
     outcome:
       "Delivered an end-to-end registration and QR verification portal enabling rapid field checks and clear submission confirmation logs.",
-    image: taxiImg,
+    image: publicImage("taxi.png"),
+    imageFallback: taxiImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "QR Code Generation", "MySQL", "JavaScript"],
@@ -329,7 +352,8 @@ export const PROJECTS = [
       "Handling high volumes of applicants with clear guidance, reliable form intake, and administrative visibility.",
     outcome:
       "Built a clean, fast onboarding portal tailored for high accessibility and structured applicant data capture.",
-    image: osunImg,
+    image: publicImage("osun.jpeg"),
+    imageFallback: osunImg,
     liveUrl: null,
     githubUrl: null,
     stack: ["Python", "Flask", "MySQL", "HTML5", "CSS3", "JavaScript"],
@@ -347,6 +371,7 @@ export const PROJECTS = [
     outcome:
       "Delivered clean unit-tested backend models, REST endpoints, and responsive web views across versions v1 through v4.",
     image: null,
+    imageFallback: null,
     liveUrl: null,
     githubUrl: "https://github.com/IbroDante/AirBnB_clone_v4",
     stack: ["Python", "Flask", "SQLAlchemy", "MySQL", "REST API", "JavaScript"],

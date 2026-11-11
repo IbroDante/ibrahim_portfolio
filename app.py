@@ -214,6 +214,11 @@ def create_app() -> Flask:
     def legacy_images(filename: str) -> Response:
         return send_from_directory(str(STATIC_IMAGES_DIR), filename)
 
+    @app.get("/images/<path:filename>")
+    def bundled_images(filename: str) -> Response:
+        """Portfolio images copied verbatim into the React build output."""
+        return send_from_directory(str(REACT_BUILD_DIR / "images"), filename)
+
     @app.get("/")
     def root() -> Response | tuple[Response, int]:
         return _serve_react_app()
